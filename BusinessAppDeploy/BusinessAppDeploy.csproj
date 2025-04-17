@@ -9,7 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="Dockerfile" />
+    <None Remove="Dockerfile" />
   </ItemGroup>
 
   <ItemGroup>
