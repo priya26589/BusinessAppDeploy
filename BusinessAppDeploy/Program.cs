@@ -9,8 +9,9 @@ builder.Services.AddHttpClient<GeocodingService>();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowSpecificOrigin",
-            builder => builder.WithOrigins("https://sasmita2622606.github.io")
-            .AllowAnyOrigin()//deployed url https://sasmita2622606.github.io, http://localhost:4200
+            builder => builder.WithOrigins("http://localhost:2026")
+            .AllowAnyOrigin()
+            //deployed url https://sasmita2622606.github.io, http://localhost:4200
                               .AllowAnyHeader()
                               .AllowAnyMethod());
 });
@@ -19,10 +20,13 @@ builder.Services.AddCors(options =>
 builder.Services.AddControllers();
 builder.Services.AddTransient<EmailService>();
 builder.Services.AddTransient<SubAdminServices>();
+string mySqlConnectionStr = Environment.GetEnvironmentVariable("") ?? builder.Configuration.GetConnectionString("DefaultConnection");
 //builder.Services.AddDbContext<BusinessContext>(options =>
-//    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+//   options.UseSqlServer());
 builder.Services.AddDbContext<BusinessContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"), provideroptions => provideroptions.EnableRetryOnFailure()));
+//builder.Services.AddDbContext<BusinessContext>(options =>
+//options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
